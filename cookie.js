@@ -1,4 +1,4 @@
-//version 1.1.0
+//version 1.1.1
 
 const MAX_DATE = 8640000000000;
 
@@ -29,7 +29,7 @@ async function setCookies(cookieInfo, domain, patcher) {
 
     for(let cookieStore of await browser.cookies.getAllCookieStores()) {
 
-        cookieInfo.storeId = cookieStore.storeId;
+        cookieInfo.storeId = cookieStore.id;
 
         let cookie = await browser.cookies.get(cookieInfo);
         
@@ -65,7 +65,7 @@ async function removeCookies(cookieInfo) {
 
     let cookieStores = await browser.cookies.getAllCookieStores();
     return cookieStores.map(cookieStore => {
-        cookieInfo.storeId = cookieStore.storeId;
+        cookieInfo.storeId = cookieStore.id;
         return browser.cookies.remove(cookieInfo);
     });
 }
