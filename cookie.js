@@ -1,6 +1,11 @@
-//version 1.1.1
+//version 1.1.2
 
 const MAX_DATE = 8640000000000;
+
+//a quick and dirty deep copy function. Avoid at all cost for objects with functions or date keys
+function deepCopy(object) {
+    return JSON.parse(JSON.stringify(object));
+}
 
 //cookie has to contain a valid url key
 //returns a promise that get fulfilled with the cookie that has been set or undefined if nothing changed
@@ -48,6 +53,7 @@ async function setCookies(cookieInfo, domain, patcher) {
 
 //cookieInfo has to contain the following keys: name, url
 function setAutoCookiePatcher(cookieInfo, patcher) {
+    
     browser.cookies.onChanged.addListener(changedInfo => {
         let {cookie} = changedInfo;
 
@@ -57,6 +63,13 @@ function setAutoCookiePatcher(cookieInfo, patcher) {
             setCookie(cookie, patcher, changedInfo.removed);
         }
     });
+
+    browser.tabs.onCreated.addListener(tab => {
+        const newCookie = deepCopy(cookieInfo);
+        newCookie.storeId = tab.cookieStoreId;
+        setCookie(newCookie, patcher);
+    });
+
 }
 
 //cookieInfo has to contain the following keys: name, url
