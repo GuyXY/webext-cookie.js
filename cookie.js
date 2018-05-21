@@ -1,5 +1,3 @@
-//version 1.1.2
-
 const MAX_DATE = 8640000000000;
 
 //a quick and dirty deep copy function. Avoid at all cost for objects with functions or date keys
